@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA - Digital Menu Board & Luxury Catalog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Cinzel', 'serif'],
+                        sans: ['Lato', 'sans-serif'],
+                    },
+                    colors: {
+                        aura: {
+                            gold: '#c9a96e',
+                            goldLight: '#e4cd97',
+                            dark: '#1a1a1a',
+                            red: '#701c1c',
+                            green: '#1a3c2f'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #050505;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        #board-container {
+            width: 100%;
+            height: 100%;
+            max-width: 1080px;
+            max-height: 1920px;
+            background-color: #f4f4f4;
+            display: flex;
+            position: relative;
+            box-shadow: 0 0 80px rgba(0,0,0,0.8);
+            overflow: hidden;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .fade-transition {
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .img-overlay-gradient {
+            background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 45%, transparent 100%);
+        }
+
+        #sidebar {
+            transition: background 1s ease;
+        }
+
+        .gold-glow {
+            box-shadow: 0 0 20px rgba(201, 169, 110, 0.5);
+        }
+
+        .glass-panel {
+            background: rgba(20, 20, 20, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(201, 169, 110, 0.2);
+        }
+
+        @keyframes pulseProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="board-container">
+
+        <!-- Top Floating Control Bar (Kiosk Controls) -->
+        <div class="absolute top-0 left-0 right-0 z-40 p-4 flex items-center justify-end pointer-events-none">
+            <!-- Kiosk Actions (Auto-Play, Search, Fullscreen) -->
+            <div class="pointer-events-auto flex items-center space-x-3">
+                <button id="search-btn" onclick="openSearchModal()" class="glass-panel text-white hover:text-aura-gold w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-lg hover:scale-110 active:scale-95" title="Search Catalog">
+                    <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                </button>
+
+                <button id="autoplay-btn" onclick="toggleSlideshow(event)" class="glass-panel text-white hover:text-aura-gold w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-lg hover:scale-110 active:scale-95" title="Toggle Auto Slideshow">
+                    <i id="autoplay-icon" class="fa-solid fa-play text-sm text-white"></i>
+                </button>
+
+                <button onclick="toggleFullscreen()" class="glass-panel text-white hover:text-aura-gold w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-lg hover:scale-110 active:scale-95" title="Toggle Fullscreen Kiosk Mode">
+                    <i class="fa-solid fa-expand text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Slideshow Progress Indicator Bar -->
+        <div id="progress-bar-container" class="absolute top-0 left-0 right-0 h-1 bg-white/10 z-50 overflow-hidden">
+            <div id="progress-bar" class="h-full bg-aura-gold w-0 transition-all duration-300"></div>
+        </div>
+
+        <!-- Left Sidebar (Categories) -->
+        <div id="sidebar" class="w-[22%] md:w-[18%] h-full flex flex-col items-center py-10 z-20 shadow-2xl overflow-y-auto no-scrollbar" style="background: linear-gradient(to bottom, #4a1515, #1a2f24, #111);">
+            <!-- Brand Logo Header -->
+            <div class="mb-6 text-center">
+                <h1 class="font-serif text-2xl md:text-3xl text-aura-gold tracking-widest font-bold drop-shadow">AURA</h1>
+                <p class="text-[10px] text-gray-400 font-sans tracking-widest uppercase">Luxury Retail</p>
+            </div>
+
+            <div id="category-list" class="flex flex-col space-y-6 w-full px-2 items-center">
+                <!-- Categories injected here -->
+            </div>
+
+            <div class="mt-auto pt-6 pb-2 text-white/40 flex flex-col items-center animate-bounce">
+                <i class="fa-solid fa-chevron-down text-lg"></i>
+            </div>
+        </div>
+
+        <!-- Main Display Content Area -->
+        <div id="main-area" class="w-[78%] md:w-[82%] h-full relative flex flex-col bg-gray-900">
+
+            <!-- Main Display Image Container -->
+            <div id="image-display-container" class="flex-1 w-full h-[72%] relative overflow-hidden bg-black p-4 pt-16">
+                <img id="main-image" src="" alt="Featured Outfit" class="w-full h-full object-cover rounded-2xl shadow-2xl fade-transition opacity-0 scale-95">
+
+                <!-- Text Overlay -->
+                <div class="absolute bottom-4 left-4 right-4 h-1/2 flex flex-col justify-end p-8 rounded-b-2xl img-overlay-gradient z-10">
+                    <div>
+                        <span id="category-badge" class="font-sans text-xs text-aura-gold uppercase tracking-[0.25em] font-bold bg-black/50 px-3 py-1 rounded-full border border-aura-gold/30 backdrop-blur-md mb-2 inline-block">CATEGORY</span>
+                        <h2 id="main-title" class="font-serif text-3xl md:text-5xl text-white font-bold leading-tight mb-2 drop-shadow-lg transform translate-y-4 opacity-0 transition-all duration-700 delay-100"></h2>
+                        <p id="main-desc" class="font-sans text-lg text-gray-300 tracking-wide transform translate-y-4 opacity-0 transition-all duration-700 delay-200"></p>
+                    </div>
+                </div>
+
+                <!-- Navigation Arrows -->
+                <button onclick="prevItem()" class="absolute left-6 top-1/2 transform -translate-y-1/2 z-20 glass-panel hover:bg-aura-gold text-white hover:text-black w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-2xl hover:scale-110 active:scale-90">
+                    <i class="fa-solid fa-chevron-left text-2xl"></i>
+                </button>
+                <button onclick="nextItem()" class="absolute right-6 top-1/2 transform -translate-y-1/2 z-20 glass-panel hover:bg-aura-gold text-white hover:text-black w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-2xl hover:scale-110 active:scale-90">
+                    <i class="fa-solid fa-chevron-right text-2xl"></i>
+                </button>
+            </div>
+
+            <!-- Bottom Thumbnail Gallery -->
+            <div class="h-[28%] bg-neutral-950 flex flex-col justify-center items-center relative border-t border-white/10 z-20 px-4">
+
+                <div class="flex items-center space-x-4 w-full justify-center">
+                    <button onclick="scrollThumbnails(-1)" class="text-gray-400 hover:text-aura-gold transition-colors p-2">
+                        <i class="fa-solid fa-angle-left text-2xl"></i>
+                    </button>
+
+                    <!-- Thumbnails Scroll Container -->
+                    <div id="thumbnail-container" class="flex space-x-4 overflow-x-auto no-scrollbar py-4 px-2 scroll-smooth max-w-full">
+                        <!-- Thumbnails injected here -->
+                    </div>
+
+                    <button onclick="scrollThumbnails(1)" class="text-gray-400 hover:text-aura-gold transition-colors p-2">
+                        <i class="fa-solid fa-angle-right text-2xl"></i>
+                    </button>
+                </div>
+
+                <div class="absolute bottom-2 text-center w-full flex items-center justify-center space-x-4">
+                    <p class="font-sans text-[11px] text-gray-400 font-bold tracking-[0.2em] uppercase">AURA Interactive Digital Menu Signage</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Toast Notification Banner -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 glass-panel text-aura-gold px-6 py-3 rounded-xl font-sans text-sm font-semibold tracking-wide shadow-2xl transform translate-y-20 opacity-0 transition-all duration-500 flex items-center space-x-3">
+        <i class="fa-solid fa-circle-check text-lg"></i>
+        <span id="toast-msg">Assets Synced Successfully</span>
+    </div>
+
+
+
+    <!-- Search Overlay Modal -->
+    <div id="search-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-lg flex flex-col p-8 hidden">
+        <div class="flex justify-between items-center max-w-4xl mx-auto w-full mb-6">
+            <div class="flex items-center space-x-3 w-full max-w-xl glass-panel px-4 py-3 rounded-2xl border border-aura-gold/30">
+                <i class="fa-solid fa-magnifying-glass text-aura-gold text-lg"></i>
+                <input type="text" id="search-input" onkeyup="handleSearch()" placeholder="Search suits, sherwanis, blazers, fabric..." class="bg-transparent text-white placeholder-gray-400 outline-none w-full font-sans text-base">
+            </div>
+            <button onclick="closeSearchModal()" class="text-gray-400 hover:text-white text-2xl p-2 ml-4">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="max-w-4xl mx-auto w-full flex-1 overflow-y-auto no-scrollbar">
+            <div id="search-results" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Search results injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const defaultFashionData = [
+            {
+                id: 'toppicks', name: 'TOP PICKS',
+                themeColor: '#1a2a3a',
+                catThumb: 'https://placehold.co/200x200/4682b4/fff?text=Picks',
+                items: [
+                    { title: 'SIGNATURE TUXEDO', desc: 'Our most requested formal look with satin peak lapel', img: 'https://placehold.co/1080x1440/4682b4/fff?text=Signature+Tuxedo\n(Top Picks)' },
+                    { title: 'EMBROIDERED SHERWANI', desc: 'Masterpiece collection best-seller with gold zardozi', img: 'https://placehold.co/1080x1440/98fb98/000?text=Embroidered+Sherwani\n(Top Picks)' },
+                    { title: 'VELVET BANDHGALA', desc: 'Premium velvet with gold brass buttons', img: 'https://placehold.co/1080x1440/d2691e/fff?text=Velvet+Bandhgala\n(Top Picks)' }
+                ]
+            },
+            {
+                id: 'blazers', name: 'BLAZERS',
+                themeColor: '#4a1515',
+                catThumb: 'https://placehold.co/200x200/8b0000/fff?text=Blazers',
+                items: [
+                    { title: 'NAVY BLUE BLAZER', desc: 'Classic fit with gold crest buttons', img: 'https://placehold.co/1080x1440/000080/fff?text=Navy+Blazer\n(Blazers)' },
+                    { title: 'LINEN SUMMER BLAZER', desc: 'Lightweight and breathable Italian linen', img: 'https://placehold.co/1080x1440/f5deb3/000?text=Linen+Blazer\n(Blazers)' },
+                    { title: 'TWEED WINTER BLAZER', desc: 'Textured fabric for colder evening wear', img: 'https://placehold.co/1080x1440/8b4513/fff?text=Tweed+Blazer\n(Blazers)' }
+                ]
+            },
+            {
+                id: '2pcsuits', name: '2PC SUITS',
+                themeColor: '#2f4f4f',
+                catThumb: 'https://placehold.co/200x200/708090/000?text=2Pc+Suits',
+                items: [
+                    { title: 'CHARCOAL BUSINESS SUIT', desc: 'Professional and sharp double-vented suit', img: 'https://placehold.co/1080x1440/36454f/fff?text=Charcoal+Suit\n(2Pc Suits)' },
+                    { title: 'LIGHT GREY SLIM FIT', desc: 'Modern silhouette for everyday luxury wear', img: 'https://placehold.co/1080x1440/d3d3d3/000?text=Light+Grey+Suit\n(2Pc Suits)' },
+                    { title: 'MIDNIGHT BLUE TUXEDO', desc: 'Elegant two-piece for formal galas', img: 'https://placehold.co/1080x1440/191970/fff?text=Midnight+Tuxedo\n(2Pc Suits)' }
+                ]
+            },
+            {
+                id: '3pcsuits', name: '3PC SUITS',
+                themeColor: '#111111',
+                catThumb: 'https://placehold.co/200x200/000000/fff?text=3Pc+Suits',
+                items: [
+                    { title: 'CLASSIC BLACK 3-PIECE', desc: 'Timeless elegance with matching waistcoat', img: 'https://placehold.co/1080x1440/000000/fff?text=Black+3Pc\n(3Pc Suits)' },
+                    { title: 'PLAID CHECK SUIT', desc: 'Distinctive pattern with contrasting vest', img: 'https://placehold.co/1080x1440/696969/fff?text=Plaid+3Pc\n(3Pc Suits)' },
+                    { title: 'ROYAL BLUE 3-PIECE', desc: 'Vibrant hue with full tailored vest', img: 'https://placehold.co/1080x1440/4169e1/fff?text=Royal+Blue+3Pc\n(3Pc Suits)' }
+                ]
+            },
+            {
+                id: 'jodhpuri', name: 'JODHPURI',
+                themeColor: '#5c4a16',
+                catThumb: 'assets/Jodhapuri/sample image.jpg',
+                items: [
+                    { title: 'ROYAL JODHPURI SUIT', desc: 'Regal bandhgala collar, structured fit', img: 'assets/Jodhapuri/sample image.jpg' },
+                    { title: 'MAROON VELVET JODHPURI', desc: 'Luxurious texture for grand occasions', img: 'https://placehold.co/1080x1440/800000/fff?text=Maroon+Jodhpuri\n(Jodhpuri)' },
+                    { title: 'IVORY TEXTURED JODHPURI', desc: 'Subtle elegance with self-embossed pattern', img: 'https://placehold.co/1080x1440/fffff0/000?text=Ivory+Jodhpuri\n(Jodhpuri)' }
+                ]
+            },
+            {
+                id: 'sherwani', name: 'SHERWANI',
+                themeColor: '#701c1c',
+                catThumb: 'https://placehold.co/200x200/8b0000/fff?text=Sherwani',
+                items: [
+                    { title: 'ROYAL RED WEDDING SHERWANI', desc: 'Premium Silk with intricate Hand-Embroidery', img: 'https://placehold.co/1080x1440/8b0000/fff?text=Royal+Red+Sherwani\n(Sherwani)' },
+                    { title: 'GOLDEN ZARDOZI SHERWANI', desc: 'Rich regal detailing designed for the groom', img: 'https://placehold.co/1080x1440/b8860b/fff?text=Golden+Sherwani\n(Sherwani)' },
+                    { title: 'OFF-WHITE CLASSIC', desc: 'Timeless royal elegance with maroon stole', img: 'https://placehold.co/1080x1440/f5f5dc/8b0000?text=Off-White+Classic\n(Sherwani)' }
+                ]
+            },
+            {
+                id: 'bundikurta', name: 'BUNDI-KURTA',
+                themeColor: '#1a3c2f',
+                catThumb: 'https://placehold.co/200x200/2e8b57/fff?text=Bundi',
+                items: [
+                    { title: 'PASTEL GREEN BUNDI SET', desc: 'Floral printed jacket over silk kurta', img: 'https://placehold.co/1080x1440/98fb98/000?text=Green+Bundi\n(Bundi-Kurta)' },
+                    { title: 'MUSTARD YELLOW SET', desc: 'Vibrant contrast for festive daywear', img: 'https://placehold.co/1080x1440/daa520/000?text=Mustard+Bundi\n(Bundi-Kurta)' },
+                    { title: 'SILK KURTA WITH NEHRU JACKET', desc: 'Rich texture with a tailored fit', img: 'https://placehold.co/1080x1440/ffebcd/000?text=Silk+Kurta+Bundi\n(Bundi-Kurta)' }
+                ]
+            },
+            {
+                id: 'dhotis', name: 'DHOTIS',
+                themeColor: '#483d8b',
+                catThumb: 'https://placehold.co/200x200/483d8b/fff?text=Dhotis',
+                items: [
+                    { title: 'TRADITIONAL SILK DHOTI SET', desc: 'Paired with matching silk kurta and angavastram', img: 'https://placehold.co/1080x1440/483d8b/fff?text=Silk+Dhoti\n(Dhotis)' },
+                    { title: 'BORDER GOLD DHOTI', desc: 'Traditional heritage style with gold zari border', img: 'https://placehold.co/1080x1440/faf0e6/000?text=Gold+Border+Dhoti\n(Dhotis)' }
+                ]
+            },
+            {
+                id: 'shirts', name: 'SHIRTS',
+                themeColor: '#3b5998',
+                catThumb: 'https://placehold.co/200x200/87ceeb/000?text=Shirts',
+                items: [
+                    { title: 'CRISP WHITE SHIRT', desc: '100% Egyptian Cotton, French Cuffs', img: 'https://placehold.co/1080x1440/ffffff/000?text=White+Shirt\n(Shirts)' },
+                    { title: 'LIGHT BLUE OXFORD', desc: 'Button-down collar, casual tailoring', img: 'https://placehold.co/1080x1440/add8e6/000?text=Blue+Oxford\n(Shirts)' },
+                    { title: 'PRINTED SILK SHIRT', desc: 'Bold evening wear luxury statement', img: 'https://placehold.co/1080x1440/ff69b4/000?text=Printed+Silk\n(Shirts)' }
+                ]
+            },
+            {
+                id: 'trousers', name: 'TROUSERS',
+                themeColor: '#222222',
+                catThumb: 'https://placehold.co/200x200/a9a9a9/000?text=Trousers',
+                items: [
+                    { title: 'TAILORED CHINOS', desc: 'Versatile beige flat-front luxury chinos', img: 'https://placehold.co/1080x1440/f5f5dc/000?text=Beige+Chinos\n(Trousers)' },
+                    { title: 'WOOL DRESS PANTS', desc: 'Charcoal grey, sharply creased wool', img: 'https://placehold.co/1080x1440/696969/fff?text=Wool+Dress+Pants\n(Trousers)' },
+                    { title: 'SLIM FIT BLACK TROUSERS', desc: 'Essential foundational wardrobe piece', img: 'https://placehold.co/1080x1440/000000/fff?text=Black+Trousers\n(Trousers)' }
+                ]
+            }
+        ];
+
+        let fashionData = JSON.parse(JSON.stringify(defaultFashionData));
+
+        let currentState = {
+            categoryIndex: 0,
+            itemIndex: 0
+        };
+
+        // Kiosk Control States
+        let isAutoPlay = false;
+        let autoPlayTimer = null;
+        let progressTimer = null;
+        let inactivityTimer = null;
+        const SLIDESHOW_INTERVAL = 8000; // 8 seconds per outfit
+        const INACTIVITY_TIMEOUT = 120000; // 2 minutes (120,000 ms)
+
+        // DOM Elements
+        const categoryListEl = document.getElementById('category-list');
+        const mainImageEl = document.getElementById('main-image');
+        const mainTitleEl = document.getElementById('main-title');
+        const mainDescEl = document.getElementById('main-desc');
+        const categoryBadgeEl = document.getElementById('category-badge');
+        const thumbnailContainerEl = document.getElementById('thumbnail-container');
+        const sidebarEl = document.getElementById('sidebar');
+        const progressBarEl = document.getElementById('progress-bar');
+        const boardContainerEl = document.getElementById('board-container');
+
+        function initApp() {
+            renderSidebar();
+            updateDisplay();
+            setupTouchEvents();
+            autoDetectLocalAssets();
+            setupInactivityListeners();
+
+            // Handle broken image fallbacks gracefully
+            mainImageEl.onerror = function() {
+                this.src = 'https://placehold.co/1080x1440/1a1a1a/c9a96e?text=AURA+Luxury+Outfit';
+            };
+        }
+
+        // --- RENDER FUNCTIONS ---
+
+        function renderSidebar() {
+            categoryListEl.innerHTML = '';
+            fashionData.forEach((cat, index) => {
+                const isActive = index === currentState.categoryIndex;
+
+                const btnHTML = `
+                    <div class="flex flex-col items-center group cursor-pointer w-full transition-transform duration-300 hover:scale-105" onclick="selectCategory(${index})">
+                        <div class="w-14 h-14 md:w-16 md:h-16 rounded-full p-1 transition-all duration-300 ${isActive ? 'bg-aura-gold scale-110 shadow-[0_0_20px_rgba(201,169,110,0.6)]' : 'bg-transparent hover:bg-white/20'}">
+                            <img src="${cat.catThumb}" alt="${cat.name}" class="w-full h-full rounded-full object-cover border-2 border-transparent" onerror="this.src='https://placehold.co/200x200/c9a96e/fff?text=${encodeURIComponent(cat.name)}'">
+                        </div>
+                        <span class="text-[10px] md:text-xs mt-2 font-sans tracking-widest font-bold text-center leading-tight transition-colors duration-300 ${isActive ? 'text-aura-gold font-bold' : 'text-gray-400 group-hover:text-gray-200'}">${cat.name}</span>
+                    </div>
+                `;
+                categoryListEl.insertAdjacentHTML('beforeend', btnHTML);
+            });
+        }
+
+        function renderThumbnails() {
+            thumbnailContainerEl.innerHTML = '';
+            const currentItems = fashionData[currentState.categoryIndex].items;
+
+            currentItems.forEach((item, index) => {
+                const isActive = index === currentState.itemIndex;
+
+                const thumbHTML = `
+                    <div class="w-20 h-28 md:w-24 md:h-32 flex-shrink-0 cursor-pointer relative group rounded-xl overflow-hidden transition-all duration-300 ${isActive ? 'ring-2 ring-aura-gold shadow-[0_0_15px_rgba(201,169,110,0.5)] transform -translate-y-2 scale-105' : 'opacity-60 hover:opacity-100'}" onclick="selectItem(${index})">
+                        <img src="${item.img}" alt="Thumbnail" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/200x200/1a1a1a/c9a96e?text=Outfit'">
+                        ${isActive ? '<div class="absolute inset-0 border-2 border-aura-gold rounded-xl pointer-events-none"></div>' : '<div class="absolute inset-0 bg-black/30 group-hover:bg-transparent transition-colors"></div>'}
+                    </div>
+                `;
+                thumbnailContainerEl.insertAdjacentHTML('beforeend', thumbHTML);
+            });
+        }
+
+        function updateDisplay() {
+            const currentCat = fashionData[currentState.categoryIndex];
+            const currentItem = currentCat.items[currentState.itemIndex];
+
+            // Update Dynamic Sidebar Gradient
+            sidebarEl.style.background = `linear-gradient(to bottom, ${currentCat.themeColor}, #0a0a0a)`;
+
+            // Animate Out Text and Main Image
+            mainTitleEl.classList.remove('translate-y-0', 'opacity-100');
+            mainTitleEl.classList.add('translate-y-4', 'opacity-0');
+            mainDescEl.classList.remove('translate-y-0', 'opacity-100');
+            mainDescEl.classList.add('translate-y-4', 'opacity-0');
+            mainImageEl.classList.remove('opacity-100', 'scale-100');
+            mainImageEl.classList.add('opacity-0', 'scale-95');
+
+            setTimeout(() => {
+                categoryBadgeEl.textContent = currentCat.name;
+                mainImageEl.src = currentItem.img;
+                mainTitleEl.textContent = currentItem.title;
+                mainDescEl.textContent = currentItem.desc;
+
+                mainImageEl.classList.remove('opacity-0', 'scale-95');
+                mainImageEl.classList.add('opacity-100', 'scale-100');
+
+                setTimeout(() => {
+                    mainTitleEl.classList.remove('translate-y-4', 'opacity-0');
+                    mainTitleEl.classList.add('translate-y-0', 'opacity-100');
+                }, 100);
+
+                setTimeout(() => {
+                    mainDescEl.classList.remove('translate-y-4', 'opacity-0');
+                    mainDescEl.classList.add('translate-y-0', 'opacity-100');
+                }, 200);
+            }, 250);
+
+            renderSidebar();
+            renderThumbnails();
+            resetProgressBar();
+        }
+
+        // --- NAVIGATION & INTERACTION ---
+
+        function selectCategory(index) {
+            if (currentState.categoryIndex === index) return;
+            currentState.categoryIndex = index;
+            currentState.itemIndex = 0;
+            updateDisplay();
+            resetAutoPlayTimer();
+        }
+
+        function selectItem(index) {
+            if (currentState.itemIndex === index) return;
+            currentState.itemIndex = index;
+            updateDisplay();
+            resetAutoPlayTimer();
+        }
+
+        function nextItem() {
+            const currentCat = fashionData[currentState.categoryIndex];
+            if (currentState.itemIndex + 1 < currentCat.items.length) {
+                currentState.itemIndex++;
+            } else {
+                currentState.categoryIndex = (currentState.categoryIndex + 1) % fashionData.length;
+                currentState.itemIndex = 0;
+            }
+            updateDisplay();
+        }
+
+        function prevItem() {
+            const currentCat = fashionData[currentState.categoryIndex];
+            if (currentState.itemIndex > 0) {
+                currentState.itemIndex--;
+            } else {
+                currentState.categoryIndex = (currentState.categoryIndex - 1 + fashionData.length) % fashionData.length;
+                currentState.itemIndex = fashionData[currentState.categoryIndex].items.length - 1;
+            }
+            updateDisplay();
+            resetAutoPlayTimer();
+        }
+
+        function scrollThumbnails(direction) {
+            thumbnailContainerEl.scrollBy({ left: direction * 150, behavior: 'smooth' });
+        }
+
+        // --- DYNAMIC FOLDER SYNC ENGINE (`webkitdirectory`) ---
+
+        // --- AUTOMATIC LOCAL ASSET DETECTION ENGINE ---
+
+        function autoDetectLocalAssets() {
+            const folderMap = {
+                'toppicks': 'Top Picks',
+                'blazers': 'Blazers',
+                '2pcsuits': '2Pc Suits',
+                '3pcsuits': '3Pc Suits',
+                'jodhapuri': 'Jodhapuri',
+                'sherwani': 'Sherwani',
+                'bundikurta': 'Bundi-Kurta',
+                'dhotis': 'Dhotis',
+                'shirts': 'Shirts',
+                'trousers': 'Trousers'
+            };
+
+            const candidates = [
+                'sample image.jpg', 'sample image.png', 'sample image.jpeg',
+                'sample.jpg', 'sample.png',
+                '1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg',
+                '1.png', '2.png', '3.png',
+                'outfit1.jpg', 'outfit2.jpg', 'outfit3.jpg',
+                'image1.jpg', 'image2.jpg', 'image3.jpg'
+            ];
+
+            fashionData.forEach(cat => {
+                const folderName = folderMap[cat.id] || cat.name;
+                const foundItems = [];
+
+                candidates.forEach(filename => {
+                    const imgUrl = `assets/${folderName}/${filename}`;
+                    const img = new Image();
+                    img.onload = function() {
+                        if (!foundItems.some(i => i.img === imgUrl)) {
+                            const rawTitle = filename.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ").toUpperCase();
+                            const cleanTitle = (rawTitle === 'SAMPLE IMAGE' || rawTitle === 'SAMPLE') ? `${cat.name} OUTFIT` : rawTitle;
+                            foundItems.push({
+                                title: cleanTitle,
+                                desc: `Tailored outfit from ${cat.name} collection`,
+                                img: imgUrl
+                            });
+                            cat.items = foundItems;
+                            cat.catThumb = foundItems[0].img;
+                            updateDisplay();
+                        }
+                    };
+                    img.src = imgUrl;
+                });
+            });
+        }
+
+        // --- KIOSK AUTO-PLAY & PROGRESS BAR ---
+
+        function startSlideshow() {
+            stopSlideshow();
+            isAutoPlay = true;
+            document.getElementById('autoplay-icon').className = 'fa-solid fa-pause text-sm text-aura-gold';
+            autoPlayTimer = setInterval(nextItem, SLIDESHOW_INTERVAL);
+            resetProgressBar();
+        }
+
+        function stopSlideshow() {
+            isAutoPlay = false;
+            document.getElementById('autoplay-icon').className = 'fa-solid fa-play text-sm text-white';
+            if (autoPlayTimer) clearInterval(autoPlayTimer);
+            if (progressTimer) clearInterval(progressTimer);
+            progressBarEl.style.width = '0%';
+        }
+
+        function toggleSlideshow(e) {
+            if (e && e.stopPropagation) e.stopPropagation();
+            if (isAutoPlay) {
+                stopSlideshow();
+                showToast('Slideshow Paused');
+            } else {
+                startSlideshow();
+                showToast('Slideshow Started');
+            }
+        }
+
+        function resetAutoPlayTimer() {
+            if (isAutoPlay) {
+                startSlideshow();
+            }
+        }
+
+        function resetProgressBar() {
+            if (!isAutoPlay) return;
+            if (progressTimer) clearInterval(progressTimer);
+            progressBarEl.style.transition = 'none';
+            progressBarEl.style.width = '0%';
+            
+            setTimeout(() => {
+                progressBarEl.style.transition = `width ${SLIDESHOW_INTERVAL}ms linear`;
+                progressBarEl.style.width = '100%';
+            }, 50);
+        }
+
+        // --- 2-MINUTE INACTIVITY AUTO-START ENGINE ---
+
+        function setupInactivityListeners() {
+            const events = ['mousemove', 'mousedown', 'touchstart', 'scroll', 'keydown'];
+            events.forEach(evt => {
+                window.addEventListener(evt, handleUserActivity, { passive: true });
+            });
+            resetInactivityTimer();
+        }
+
+        function handleUserActivity(e) {
+            if (e && e.target && e.target.closest && e.target.closest('#autoplay-btn')) {
+                return;
+            }
+            resetInactivityTimer();
+        }
+
+        function resetInactivityTimer() {
+            if (inactivityTimer) clearTimeout(inactivityTimer);
+            inactivityTimer = setTimeout(() => {
+                startSlideshow();
+                showToast('Slideshow Auto-Started (2 min inactivity)');
+            }, INACTIVITY_TIMEOUT);
+        }
+
+
+
+        // --- FULLSCREEN KIOSK ---
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                boardContainerEl.requestFullscreen().catch(err => {
+                    showToast('Fullscreen not supported by browser');
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // --- TOUCH SWIPE GESTURES ---
+
+        function setupTouchEvents() {
+            let touchStartX = 0;
+            let touchEndX = 0;
+            const displayArea = document.getElementById('image-display-container');
+
+            displayArea.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            displayArea.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, { passive: true });
+
+            function handleSwipe() {
+                const diff = touchEndX - touchStartX;
+                if (Math.abs(diff) > 50) {
+                    if (diff < 0) {
+                        nextItem();
+                    } else {
+                        prevItem();
+                    }
+                }
+            }
+        }
+
+
+
+        // --- SEARCH OVERLAY MODAL ---
+
+        function openSearchModal() {
+            stopSlideshow();
+            document.getElementById('search-modal').classList.remove('hidden');
+            document.getElementById('search-input').value = '';
+            handleSearch();
+            document.getElementById('search-input').focus();
+        }
+
+        function closeSearchModal() {
+            document.getElementById('search-modal').classList.add('hidden');
+            resetAutoPlayTimer();
+        }
+
+        function handleSearch() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const container = document.getElementById('search-results');
+            container.innerHTML = '';
+
+            fashionData.forEach((cat, catIdx) => {
+                cat.items.forEach((item, itemIdx) => {
+                    if (item.title.toLowerCase().includes(query) || item.desc.toLowerCase().includes(query) || cat.name.toLowerCase().includes(query)) {
+                        const cardHTML = `
+                            <div onclick="selectSearchResult(${catIdx}, ${itemIdx})" class="glass-panel p-3 rounded-2xl cursor-pointer hover:border-aura-gold transition-all hover:scale-105 group">
+                                <div class="w-full h-40 rounded-xl overflow-hidden mb-2">
+                                    <img src="${item.img}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/200x200/1a1a1a/c9a96e?text=Outfit'">
+                                </div>
+                                <span class="text-[10px] text-aura-gold font-bold uppercase tracking-widest block">${cat.name}</span>
+                                <h4 class="text-sm font-serif font-bold text-white group-hover:text-aura-gold transition-colors line-clamp-1">${item.title}</h4>
+                            </div>
+                        `;
+                        container.insertAdjacentHTML('beforeend', cardHTML);
+                    }
+                });
+            });
+        }
+
+        function selectSearchResult(catIdx, itemIdx) {
+            currentState.categoryIndex = catIdx;
+            currentState.itemIndex = itemIdx;
+            closeSearchModal();
+            updateDisplay();
+        }
+
+        // --- TOAST NOTIFICATIONS ---
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Initialize application on load
+        window.onload = initApp;
+    </script>
+</body>
+
+</html>
