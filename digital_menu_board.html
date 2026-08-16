@@ -933,25 +933,47 @@
             container.innerHTML = '';
 
             fashionData.forEach((cat, catIdx) => {
-                cat.items.forEach((item, itemIdx) => {
-                    if (item.title.toLowerCase().includes(query) || item.desc.toLowerCase().includes(query) || cat.name.toLowerCase().includes(query)) {
-                        const cardHTML = `
-                            <div onclick="selectSearchResult(${catIdx}, ${itemIdx})" class="glass-panel p-3 rounded-2xl cursor-pointer hover:border-aura-gold transition-all hover:scale-105 group">
-                                <div class="w-full h-40 rounded-xl overflow-hidden mb-2">
-                                    <img src="${item.img}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/200x200/1a1a1a/c9a96e?text=Outfit'">
+                if (cat.subcategories) {
+                    cat.subcategories.forEach((sub, subIdx) => {
+                        if (!sub.items) return;
+                        sub.items.forEach((item, itemIdx) => {
+                            if (item.title.toLowerCase().includes(query) || item.desc.toLowerCase().includes(query) || sub.name.toLowerCase().includes(query) || cat.name.toLowerCase().includes(query)) {
+                                const cardHTML = `
+                                    <div onclick="selectSearchResult(${catIdx}, ${itemIdx}, ${subIdx})" class="glass-panel p-3 rounded-2xl cursor-pointer hover:border-aura-gold transition-all hover:scale-105 group">
+                                        <div class="w-full h-40 rounded-xl overflow-hidden mb-2">
+                                            <img src="${item.img}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/200x200/1a1a1a/c9a96e?text=Outfit'">
+                                        </div>
+                                        <span class="text-[10px] text-aura-gold font-bold uppercase tracking-widest block">${cat.name} / ${sub.name}</span>
+                                        <h4 class="text-sm font-serif font-bold text-white group-hover:text-aura-gold transition-colors line-clamp-1">${item.title}</h4>
+                                    </div>
+                                `;
+                                container.insertAdjacentHTML('beforeend', cardHTML);
+                            }
+                        });
+                    });
+                } else {
+                    if (!cat.items) return;
+                    cat.items.forEach((item, itemIdx) => {
+                        if (item.title.toLowerCase().includes(query) || item.desc.toLowerCase().includes(query) || cat.name.toLowerCase().includes(query)) {
+                            const cardHTML = `
+                                <div onclick="selectSearchResult(${catIdx}, ${itemIdx}, null)" class="glass-panel p-3 rounded-2xl cursor-pointer hover:border-aura-gold transition-all hover:scale-105 group">
+                                    <div class="w-full h-40 rounded-xl overflow-hidden mb-2">
+                                        <img src="${item.img}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/200x200/1a1a1a/c9a96e?text=Outfit'">
+                                    </div>
+                                    <span class="text-[10px] text-aura-gold font-bold uppercase tracking-widest block">${cat.name}</span>
+                                    <h4 class="text-sm font-serif font-bold text-white group-hover:text-aura-gold transition-colors line-clamp-1">${item.title}</h4>
                                 </div>
-                                <span class="text-[10px] text-aura-gold font-bold uppercase tracking-widest block">${cat.name}</span>
-                                <h4 class="text-sm font-serif font-bold text-white group-hover:text-aura-gold transition-colors line-clamp-1">${item.title}</h4>
-                            </div>
-                        `;
-                        container.insertAdjacentHTML('beforeend', cardHTML);
-                    }
-                });
+                            `;
+                            container.insertAdjacentHTML('beforeend', cardHTML);
+                        }
+                    });
+                }
             });
         }
 
-        function selectSearchResult(catIdx, itemIdx) {
+        function selectSearchResult(catIdx, itemIdx, subIdx) {
             currentState.categoryIndex = catIdx;
+            currentState.subcategoryIndex = subIdx !== undefined ? subIdx : null;
             currentState.itemIndex = itemIdx;
             closeSearchModal();
             updateDisplay();
