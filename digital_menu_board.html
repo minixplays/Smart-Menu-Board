@@ -9,7 +9,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap"
+        rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -53,13 +55,14 @@
             background-color: #f4f4f4;
             display: flex;
             position: relative;
-            box-shadow: 0 0 80px rgba(0,0,0,0.8);
+            box-shadow: 0 0 80px rgba(0, 0, 0, 0.8);
             overflow: hidden;
         }
 
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
+
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
@@ -70,7 +73,7 @@
         }
 
         .img-overlay-gradient {
-            background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 45%, transparent 100%);
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.5) 45%, transparent 100%);
         }
 
         #sidebar {
@@ -89,8 +92,13 @@
         }
 
         @keyframes pulseProgress {
-            0% { width: 0%; }
-            100% { width: 100%; }
+            0% {
+                width: 0%;
+            }
+
+            100% {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -103,15 +111,21 @@
         <div class="absolute top-0 left-0 right-0 z-40 p-4 flex items-center justify-end pointer-events-none">
             <!-- Kiosk Actions (Auto-Play, Search, Fullscreen) -->
             <div class="pointer-events-auto flex items-center space-x-3">
-                <button id="search-btn" onclick="openSearchModal()" class="glass-panel text-white hover:text-aura-gold w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-lg hover:scale-110 active:scale-95" title="Search Catalog">
+                <button id="search-btn" onclick="openSearchModal()"
+                    class="glass-panel text-white hover:text-aura-gold w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-lg hover:scale-110 active:scale-95"
+                    title="Search Catalog">
                     <i class="fa-solid fa-magnifying-glass text-sm"></i>
                 </button>
 
-                <button id="autoplay-btn" onclick="toggleSlideshow(event)" class="glass-panel text-white hover:text-aura-gold w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-lg hover:scale-110 active:scale-95" title="Toggle Auto Slideshow">
+                <button id="autoplay-btn" onclick="toggleSlideshow(event)"
+                    class="glass-panel text-white hover:text-aura-gold w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-lg hover:scale-110 active:scale-95"
+                    title="Toggle Auto Slideshow">
                     <i id="autoplay-icon" class="fa-solid fa-play text-sm text-white"></i>
                 </button>
 
-                <button onclick="toggleFullscreen()" class="glass-panel text-white hover:text-aura-gold w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-lg hover:scale-110 active:scale-95" title="Toggle Fullscreen Kiosk Mode">
+                <button onclick="toggleFullscreen()"
+                    class="glass-panel text-white hover:text-aura-gold w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-lg hover:scale-110 active:scale-95"
+                    title="Toggle Fullscreen Kiosk Mode">
                     <i class="fa-solid fa-expand text-sm"></i>
                 </button>
             </div>
@@ -123,10 +137,13 @@
         </div>
 
         <!-- Left Sidebar (Categories) -->
-        <div id="sidebar" class="w-[22%] md:w-[18%] h-full flex flex-col items-center py-10 z-20 shadow-2xl overflow-y-auto no-scrollbar" style="background: linear-gradient(to bottom, #4a1515, #1a2f24, #111);">
+        <div id="sidebar"
+            class="w-[22%] md:w-[18%] h-full flex flex-col items-center py-10 z-20 shadow-2xl overflow-y-auto no-scrollbar"
+            style="background: linear-gradient(to bottom, #4a1515, #1a2f24, #111);">
             <!-- Brand Logo Header -->
             <div class="mb-6 text-center">
-                <h1 class="font-serif text-2xl md:text-3xl text-aura-gold tracking-widest font-bold drop-shadow">AURA</h1>
+                <h1 class="font-serif text-2xl md:text-3xl text-aura-gold tracking-widest font-bold drop-shadow">AURA
+                </h1>
                 <p class="text-[10px] text-gray-400 font-sans tracking-widest uppercase">Luxury Retail</p>
             </div>
 
@@ -144,46 +161,61 @@
 
             <!-- Main Display Image Container -->
             <div id="image-display-container" class="flex-1 w-full h-[72%] relative overflow-hidden bg-black p-4 pt-16">
-                <img id="main-image" src="" alt="Featured Outfit" class="w-full h-full object-cover rounded-2xl shadow-2xl fade-transition opacity-0 scale-95">
+                <img id="main-image" src="" alt="Featured Outfit"
+                    class="w-full h-full object-contain rounded-2xl shadow-2xl fade-transition opacity-0 scale-95">
 
                 <!-- Text Overlay -->
-                <div class="absolute bottom-4 left-4 right-4 h-1/2 flex flex-col justify-end p-8 rounded-b-2xl img-overlay-gradient z-10">
+                <div
+                    class="absolute bottom-4 left-4 right-4 h-1/2 flex flex-col justify-end p-8 rounded-b-2xl img-overlay-gradient z-10">
                     <div>
-                        <span id="category-badge" class="font-sans text-xs text-aura-gold uppercase tracking-[0.25em] font-bold bg-black/50 px-3 py-1 rounded-full border border-aura-gold/30 backdrop-blur-md mb-2 inline-block">CATEGORY</span>
-                        <h2 id="main-title" class="font-serif text-3xl md:text-5xl text-white font-bold leading-tight mb-2 drop-shadow-lg transform translate-y-4 opacity-0 transition-all duration-700 delay-100"></h2>
-                        <p id="main-desc" class="font-sans text-lg text-gray-300 tracking-wide transform translate-y-4 opacity-0 transition-all duration-700 delay-200"></p>
+                        <span id="category-badge"
+                            class="font-sans text-xs text-aura-gold uppercase tracking-[0.25em] font-bold bg-black/50 px-3 py-1 rounded-full border border-aura-gold/30 backdrop-blur-md mb-2 inline-block">CATEGORY</span>
+                        <h2 id="main-title"
+                            class="font-serif text-3xl md:text-5xl text-white font-bold leading-tight mb-2 drop-shadow-lg transform translate-y-4 opacity-0 transition-all duration-700 delay-100">
+                        </h2>
+                        <p id="main-desc"
+                            class="font-sans text-lg text-gray-300 tracking-wide transform translate-y-4 opacity-0 transition-all duration-700 delay-200">
+                        </p>
                     </div>
                 </div>
 
                 <!-- Navigation Arrows -->
-                <button onclick="prevItem()" class="absolute left-6 top-1/2 transform -translate-y-1/2 z-20 glass-panel hover:bg-aura-gold text-white hover:text-black w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-2xl hover:scale-110 active:scale-90">
+                <button onclick="prevItem()"
+                    class="absolute left-6 top-1/2 transform -translate-y-1/2 z-20 glass-panel hover:bg-aura-gold text-white hover:text-black w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-2xl hover:scale-110 active:scale-90">
                     <i class="fa-solid fa-chevron-left text-2xl"></i>
                 </button>
-                <button onclick="nextItem()" class="absolute right-6 top-1/2 transform -translate-y-1/2 z-20 glass-panel hover:bg-aura-gold text-white hover:text-black w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-2xl hover:scale-110 active:scale-90">
+                <button onclick="nextItem()"
+                    class="absolute right-6 top-1/2 transform -translate-y-1/2 z-20 glass-panel hover:bg-aura-gold text-white hover:text-black w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-2xl hover:scale-110 active:scale-90">
                     <i class="fa-solid fa-chevron-right text-2xl"></i>
                 </button>
             </div>
 
             <!-- Bottom Thumbnail Gallery -->
-            <div class="h-[28%] bg-neutral-950 flex flex-col justify-center items-center relative border-t border-white/10 z-20 px-4">
+            <!-- Bottom Thumbnail Gallery -->
+            <div id="thumbnail-gallery-container"
+                class="h-[28%] bg-neutral-950 flex flex-col justify-center items-center relative border-t border-white/10 z-20 px-4">
 
                 <div class="flex items-center space-x-4 w-full justify-center">
-                    <button onclick="scrollThumbnails(-1)" class="text-gray-400 hover:text-aura-gold transition-colors p-2">
+                    <button onclick="scrollThumbnails(-1)"
+                        class="text-gray-400 hover:text-aura-gold transition-colors p-2">
                         <i class="fa-solid fa-angle-left text-2xl"></i>
                     </button>
 
                     <!-- Thumbnails Scroll Container -->
-                    <div id="thumbnail-container" class="flex space-x-4 overflow-x-auto no-scrollbar py-4 px-2 scroll-smooth max-w-full">
+                    <div id="thumbnail-container"
+                        class="flex space-x-4 overflow-x-auto no-scrollbar py-4 px-2 scroll-smooth max-w-full">
                         <!-- Thumbnails injected here -->
                     </div>
 
-                    <button onclick="scrollThumbnails(1)" class="text-gray-400 hover:text-aura-gold transition-colors p-2">
+                    <button onclick="scrollThumbnails(1)"
+                        class="text-gray-400 hover:text-aura-gold transition-colors p-2">
                         <i class="fa-solid fa-angle-right text-2xl"></i>
                     </button>
                 </div>
 
                 <div class="absolute bottom-2 text-center w-full flex items-center justify-center space-x-4">
-                    <p class="font-sans text-[11px] text-gray-400 font-bold tracking-[0.2em] uppercase">AURA Interactive Digital Menu Signage</p>
+                    <p class="font-sans text-[11px] text-gray-400 font-bold tracking-[0.2em] uppercase">AURA Interactive
+                        Digital Menu Signage</p>
                 </div>
             </div>
 
@@ -191,7 +223,8 @@
     </div>
 
     <!-- Toast Notification Banner -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 glass-panel text-aura-gold px-6 py-3 rounded-xl font-sans text-sm font-semibold tracking-wide shadow-2xl transform translate-y-20 opacity-0 transition-all duration-500 flex items-center space-x-3">
+    <div id="toast"
+        class="fixed bottom-6 right-6 z-50 glass-panel text-aura-gold px-6 py-3 rounded-xl font-sans text-sm font-semibold tracking-wide shadow-2xl transform translate-y-20 opacity-0 transition-all duration-500 flex items-center space-x-3">
         <i class="fa-solid fa-circle-check text-lg"></i>
         <span id="toast-msg">Assets Synced Successfully</span>
     </div>
@@ -201,9 +234,12 @@
     <!-- Search Overlay Modal -->
     <div id="search-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-lg flex flex-col p-8 hidden">
         <div class="flex justify-between items-center max-w-4xl mx-auto w-full mb-6">
-            <div class="flex items-center space-x-3 w-full max-w-xl glass-panel px-4 py-3 rounded-2xl border border-aura-gold/30">
+            <div
+                class="flex items-center space-x-3 w-full max-w-xl glass-panel px-4 py-3 rounded-2xl border border-aura-gold/30">
                 <i class="fa-solid fa-magnifying-glass text-aura-gold text-lg"></i>
-                <input type="text" id="search-input" onkeyup="handleSearch()" placeholder="Search suits, sherwanis, blazers, fabric..." class="bg-transparent text-white placeholder-gray-400 outline-none w-full font-sans text-base">
+                <input type="text" id="search-input" onkeyup="handleSearch()"
+                    placeholder="Search suits, sherwanis, blazers, fabric..."
+                    class="bg-transparent text-white placeholder-gray-400 outline-none w-full font-sans text-base">
             </div>
             <button onclick="closeSearchModal()" class="text-gray-400 hover:text-white text-2xl p-2 ml-4">
                 <i class="fa-solid fa-xmark"></i>
@@ -222,100 +258,185 @@
             {
                 id: 'toppicks', name: 'TOP PICKS',
                 themeColor: '#1a2a3a',
-                catThumb: 'https://placehold.co/200x200/4682b4/fff?text=Picks',
+                catThumb: 'assets/Top Picks/sample image.jpg',
                 items: [
-                    { title: 'SIGNATURE TUXEDO', desc: 'Our most requested formal look with satin peak lapel', img: 'https://placehold.co/1080x1440/4682b4/fff?text=Signature+Tuxedo\n(Top Picks)' },
-                    { title: 'EMBROIDERED SHERWANI', desc: 'Masterpiece collection best-seller with gold zardozi', img: 'https://placehold.co/1080x1440/98fb98/000?text=Embroidered+Sherwani\n(Top Picks)' },
-                    { title: 'VELVET BANDHGALA', desc: 'Premium velvet with gold brass buttons', img: 'https://placehold.co/1080x1440/d2691e/fff?text=Velvet+Bandhgala\n(Top Picks)' }
+                    { title: 'SIGNATURE TUXEDO', desc: 'Our most requested formal look with satin peak lapel', img: 'assets/Top Picks/sample image.jpg' },
+                    { title: 'EMBROIDERED SHERWANI', desc: 'Masterpiece collection best-seller with gold zardozi', img: 'assets/Top Picks/sample image.jpg' },
+                    { title: 'VELVET BANDHGALA', desc: 'Premium velvet with gold brass buttons', img: 'assets/Top Picks/sample image.jpg' }
                 ]
             },
             {
                 id: 'blazers', name: 'BLAZERS',
                 themeColor: '#4a1515',
-                catThumb: 'https://placehold.co/200x200/8b0000/fff?text=Blazers',
-                items: [
-                    { title: 'NAVY BLUE BLAZER', desc: 'Classic fit with gold crest buttons', img: 'https://placehold.co/1080x1440/000080/fff?text=Navy+Blazer\n(Blazers)' },
-                    { title: 'LINEN SUMMER BLAZER', desc: 'Lightweight and breathable Italian linen', img: 'https://placehold.co/1080x1440/f5deb3/000?text=Linen+Blazer\n(Blazers)' },
-                    { title: 'TWEED WINTER BLAZER', desc: 'Textured fabric for colder evening wear', img: 'https://placehold.co/1080x1440/8b4513/fff?text=Tweed+Blazer\n(Blazers)' }
+                catThumb: 'assets/Blazers/sample image.jpg',
+                subcategories: [
+                    {
+                        id: 'blazers_casuals', name: 'CASUALS',
+                        catThumb: 'assets/Blazers/Casuals/sample image.jpg',
+                        items: [
+                            { title: 'LINEN SUMMER BLAZER', desc: 'Lightweight and breathable Italian linen', img: 'assets/Blazers/Casuals/sample image.jpg' },
+                            { title: 'TWEED WINTER BLAZER', desc: 'Textured fabric for colder evening wear', img: 'assets/Blazers/Casuals/sample image.jpg' },
+                            { title: 'PRINTED COTTON BLAZER', desc: 'Bold patterns for weekend getaways', img: 'assets/Blazers/Casuals/sample image.jpg' }
+                        ]
+                    },
+                    {
+                        id: 'blazers_formals', name: 'FORMALS',
+                        catThumb: 'assets/Blazers/Formals/sample image.jpg',
+                        items: [
+                            { title: 'NAVY BLUE BLAZER', desc: 'Classic fit with gold crest buttons', img: 'assets/Blazers/Formals/sample image.jpg' },
+                            { title: 'DOUBLE BREASTED BLAZER', desc: 'Sharp tailoring for power dressing', img: 'assets/Blazers/Formals/sample image.jpg' },
+                            { title: 'BLACK VELVET BLAZER', desc: 'Luxurious finish for evening galas', img: 'assets/Blazers/Formals/sample image.jpg' }
+                        ]
+                    }
                 ]
             },
             {
                 id: '2pcsuits', name: '2PC SUITS',
                 themeColor: '#2f4f4f',
-                catThumb: 'https://placehold.co/200x200/708090/000?text=2Pc+Suits',
-                items: [
-                    { title: 'CHARCOAL BUSINESS SUIT', desc: 'Professional and sharp double-vented suit', img: 'https://placehold.co/1080x1440/36454f/fff?text=Charcoal+Suit\n(2Pc Suits)' },
-                    { title: 'LIGHT GREY SLIM FIT', desc: 'Modern silhouette for everyday luxury wear', img: 'https://placehold.co/1080x1440/d3d3d3/000?text=Light+Grey+Suit\n(2Pc Suits)' },
-                    { title: 'MIDNIGHT BLUE TUXEDO', desc: 'Elegant two-piece for formal galas', img: 'https://placehold.co/1080x1440/191970/fff?text=Midnight+Tuxedo\n(2Pc Suits)' }
+                catThumb: 'assets/2Pc Suits/sample image.jpg',
+                subcategories: [
+                    {
+                        id: '2pcsuits_formals', name: 'FORMALS',
+                        catThumb: 'assets/2Pc Suits/Formals/sample image.jpg',
+                        items: [
+                            { title: 'CHARCOAL BUSINESS SUIT', desc: 'Professional and sharp double-vented suit', img: 'assets/2Pc Suits/Formals/sample image.jpg' },
+                            { title: 'LIGHT GREY SLIM FIT', desc: 'Modern silhouette for everyday luxury wear', img: 'assets/2Pc Suits/Formals/sample image.jpg' },
+                            { title: 'NAVY PINSTRIPE SUIT', desc: 'Classic corporate elegance', img: 'assets/2Pc Suits/Formals/sample image.jpg' }
+                        ]
+                    },
+                    {
+                        id: '2pcsuits_wedding', name: 'WEDDING',
+                        catThumb: 'assets/2Pc Suits/Wedding/sample image.jpg',
+                        items: [
+                            { title: 'MIDNIGHT BLUE TUXEDO', desc: 'Elegant two-piece for formal galas', img: 'assets/2Pc Suits/Wedding/sample image.jpg' },
+                            { title: 'WHITE LINEN WEDDING SUIT', desc: 'Perfect for beach and destination weddings', img: 'assets/2Pc Suits/Wedding/sample image.jpg' },
+                            { title: 'SILK BLEND TUXEDO', desc: 'Premium shine and luxurious drape', img: 'assets/2Pc Suits/Wedding/sample image.jpg' }
+                        ]
+                    }
                 ]
             },
             {
                 id: '3pcsuits', name: '3PC SUITS',
                 themeColor: '#111111',
-                catThumb: 'https://placehold.co/200x200/000000/fff?text=3Pc+Suits',
-                items: [
-                    { title: 'CLASSIC BLACK 3-PIECE', desc: 'Timeless elegance with matching waistcoat', img: 'https://placehold.co/1080x1440/000000/fff?text=Black+3Pc\n(3Pc Suits)' },
-                    { title: 'PLAID CHECK SUIT', desc: 'Distinctive pattern with contrasting vest', img: 'https://placehold.co/1080x1440/696969/fff?text=Plaid+3Pc\n(3Pc Suits)' },
-                    { title: 'ROYAL BLUE 3-PIECE', desc: 'Vibrant hue with full tailored vest', img: 'https://placehold.co/1080x1440/4169e1/fff?text=Royal+Blue+3Pc\n(3Pc Suits)' }
+                catThumb: 'assets/3Pc Suits/sample image.jpg',
+                subcategories: [
+                    {
+                        id: '3pcsuits_waistcoats', name: 'WAISTCOATS',
+                        catThumb: 'assets/3Pc Suits/Waistcoats/sample image.jpg',
+                        items: [
+                            { title: 'PLAID CHECK SUIT WITH VEST', desc: 'Distinctive pattern with contrasting vest', img: 'assets/3Pc Suits/Waistcoats/sample image.jpg' },
+                            { title: 'TWEED 3-PIECE SUIT', desc: 'Classic vintage British tailoring', img: 'assets/3Pc Suits/Waistcoats/sample image.jpg' },
+                            { title: 'DOUBLE BREASTED WAISTCOAT SUIT', desc: 'Sophisticated layered look', img: 'assets/3Pc Suits/Waistcoats/sample image.jpg' }
+                        ]
+                    },
+                    {
+                        id: '3pcsuits_wedding', name: 'WEDDING',
+                        catThumb: 'assets/3Pc Suits/Wedding/sample image.jpg',
+                        items: [
+                            { title: 'CLASSIC BLACK 3-PIECE', desc: 'Timeless elegance with matching waistcoat', img: 'assets/3Pc Suits/Wedding/sample image.jpg' },
+                            { title: 'ROYAL BLUE 3-PIECE', desc: 'Vibrant hue with full tailored vest', img: 'assets/3Pc Suits/Wedding/sample image.jpg' },
+                            { title: 'IVORY WEDDING TUXEDO 3-PIECE', desc: 'Standout elegance for the groom', img: 'assets/3Pc Suits/Wedding/sample image.jpg' }
+                        ]
+                    }
                 ]
             },
             {
                 id: 'jodhpuri', name: 'JODHPURI',
                 themeColor: '#5c4a16',
                 catThumb: 'assets/Jodhapuri/sample image.jpg',
-                items: [
-                    { title: 'ROYAL JODHPURI SUIT', desc: 'Regal bandhgala collar, structured fit', img: 'assets/Jodhapuri/sample image.jpg' },
-                    { title: 'MAROON VELVET JODHPURI', desc: 'Luxurious texture for grand occasions', img: 'https://placehold.co/1080x1440/800000/fff?text=Maroon+Jodhpuri\n(Jodhpuri)' },
-                    { title: 'IVORY TEXTURED JODHPURI', desc: 'Subtle elegance with self-embossed pattern', img: 'https://placehold.co/1080x1440/fffff0/000?text=Ivory+Jodhpuri\n(Jodhpuri)' }
+                subcategories: [
+                    {
+                        id: 'jodhpuri_formal', name: 'FORMAL',
+                        catThumb: 'assets/Jodhapuri/Formal/sample image.jpg',
+                        items: [
+                            { title: 'ROYAL JODHPURI SUIT', desc: 'Regal bandhgala collar, structured fit', img: 'assets/Jodhapuri/Formal/sample image.jpg' },
+                            { title: 'CLASSIC BLACK JODHPURI', desc: 'Timeless formal elegance', img: 'assets/Jodhapuri/Formal/sample image.jpg' },
+                            { title: 'NAVY BLUE BANDHGALA', desc: 'Sharp tailoring for evening wear', img: 'assets/Jodhapuri/Formal/sample image.jpg' }
+                        ]
+                    },
+                    {
+                        id: 'jodhpuri_wedding', name: 'WEDDING',
+                        catThumb: 'assets/Jodhapuri/Wedding/sample image.jpg',
+                        items: [
+                            { title: 'MAROON VELVET JODHPURI', desc: 'Luxurious texture for grand occasions', img: 'assets/Jodhapuri/Wedding/sample image.jpg' },
+                            { title: 'IVORY TEXTURED JODHPURI', desc: 'Subtle elegance with self-embossed pattern', img: 'assets/Jodhapuri/Wedding/sample image.jpg' },
+                            { title: 'GOLD EMBROIDERED JODHPURI', desc: 'Rich heritage design for grooms', img: 'assets/Jodhapuri/Wedding/sample image.jpg' }
+                        ]
+                    }
                 ]
             },
             {
                 id: 'sherwani', name: 'SHERWANI',
                 themeColor: '#701c1c',
-                catThumb: 'https://placehold.co/200x200/8b0000/fff?text=Sherwani',
+                catThumb: 'assets/Sherwani/sample image.jpg',
                 items: [
-                    { title: 'ROYAL RED WEDDING SHERWANI', desc: 'Premium Silk with intricate Hand-Embroidery', img: 'https://placehold.co/1080x1440/8b0000/fff?text=Royal+Red+Sherwani\n(Sherwani)' },
-                    { title: 'GOLDEN ZARDOZI SHERWANI', desc: 'Rich regal detailing designed for the groom', img: 'https://placehold.co/1080x1440/b8860b/fff?text=Golden+Sherwani\n(Sherwani)' },
-                    { title: 'OFF-WHITE CLASSIC', desc: 'Timeless royal elegance with maroon stole', img: 'https://placehold.co/1080x1440/f5f5dc/8b0000?text=Off-White+Classic\n(Sherwani)' }
+                    { title: 'ROYAL RED WEDDING SHERWANI', desc: 'Premium Silk with intricate Hand-Embroidery', img: 'assets/Sherwani/sample image.jpg' },
+                    { title: 'GOLDEN ZARDOZI SHERWANI', desc: 'Rich regal detailing designed for the groom', img: 'assets/Sherwani/sample image.jpg' },
+                    { title: 'OFF-WHITE CLASSIC', desc: 'Timeless royal elegance with maroon stole', img: 'assets/Sherwani/sample image.jpg' }
                 ]
             },
             {
-                id: 'bundikurta', name: 'BUNDI-KURTA',
+                id: 'bundi', name: 'BUNDI',
                 themeColor: '#1a3c2f',
-                catThumb: 'https://placehold.co/200x200/2e8b57/fff?text=Bundi',
+                catThumb: 'assets/Bundi/Formal Bundi/sample image.jpg',
+                subcategories: [
+                    {
+                        id: 'formalbundi', name: 'FORMAL BUNDI',
+                        catThumb: 'assets/Bundi/Formal Bundi/sample image.jpg',
+                        items: [
+                            { title: 'CLASSIC BLACK BUNDI', desc: 'Structured fit for formal occasions', img: 'assets/Bundi/Formal Bundi/sample image.jpg' },
+                            { title: 'NAVY BLUE BUNDI', desc: 'Elegant and understated', img: 'assets/Bundi/Formal Bundi/sample image.jpg' },
+                            { title: 'GREY TEXTURED BUNDI', desc: 'Sophisticated professional look', img: 'assets/Bundi/Formal Bundi/sample image.jpg' }
+                        ]
+                    },
+                    {
+                        id: 'ethnicbundi', name: 'ETHNIC BUNDI',
+                        catThumb: 'assets/Bundi/Ethnic Bundi/sample image.jpg',
+                        items: [
+                            { title: 'FLORAL PRINTED BUNDI', desc: 'Perfect for festive daywear', img: 'assets/Bundi/Ethnic Bundi/sample image.jpg' },
+                            { title: 'EMBROIDERED SILK BUNDI', desc: 'Rich texture and vibrant colors', img: 'assets/Bundi/Ethnic Bundi/sample image.jpg' },
+                            { title: 'ZARI WORK BUNDI', desc: 'Traditional heritage style', img: 'assets/Bundi/Ethnic Bundi/sample image.jpg' }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'kurta', name: 'KURTA',
+                themeColor: '#2a4c3f',
+                catThumb: 'assets/Kurta/sample image.jpg',
                 items: [
-                    { title: 'PASTEL GREEN BUNDI SET', desc: 'Floral printed jacket over silk kurta', img: 'https://placehold.co/1080x1440/98fb98/000?text=Green+Bundi\n(Bundi-Kurta)' },
-                    { title: 'MUSTARD YELLOW SET', desc: 'Vibrant contrast for festive daywear', img: 'https://placehold.co/1080x1440/daa520/000?text=Mustard+Bundi\n(Bundi-Kurta)' },
-                    { title: 'SILK KURTA WITH NEHRU JACKET', desc: 'Rich texture with a tailored fit', img: 'https://placehold.co/1080x1440/ffebcd/000?text=Silk+Kurta+Bundi\n(Bundi-Kurta)' }
+                    { title: 'SILK KURTA', desc: 'Classic silk kurta for formal events', img: 'assets/Kurta/sample image.jpg' },
+                    { title: 'EMBROIDERED KURTA', desc: 'Intricate detailing on premium fabric', img: 'assets/Kurta/sample image.jpg' },
+                    { title: 'COTTON BLEND KURTA', desc: 'Breathable and stylish for daytime wear', img: 'assets/Kurta/sample image.jpg' }
                 ]
             },
             {
                 id: 'dhotis', name: 'DHOTIS',
                 themeColor: '#483d8b',
-                catThumb: 'https://placehold.co/200x200/483d8b/fff?text=Dhotis',
+                catThumb: 'assets/Dhotis/sample image.jpg',
                 items: [
-                    { title: 'TRADITIONAL SILK DHOTI SET', desc: 'Paired with matching silk kurta and angavastram', img: 'https://placehold.co/1080x1440/483d8b/fff?text=Silk+Dhoti\n(Dhotis)' },
-                    { title: 'BORDER GOLD DHOTI', desc: 'Traditional heritage style with gold zari border', img: 'https://placehold.co/1080x1440/faf0e6/000?text=Gold+Border+Dhoti\n(Dhotis)' }
+                    { title: 'TRADITIONAL SILK DHOTI SET', desc: 'Paired with matching silk kurta and angavastram', img: 'assets/Dhotis/sample image.jpg' },
+                    { title: 'BORDER GOLD DHOTI', desc: 'Traditional heritage style with gold zari border', img: 'assets/Dhotis/sample image.jpg' }
                 ]
             },
             {
                 id: 'shirts', name: 'SHIRTS',
                 themeColor: '#3b5998',
-                catThumb: 'https://placehold.co/200x200/87ceeb/000?text=Shirts',
+                catThumb: 'assets/Shirts/sample image.jpg',
                 items: [
-                    { title: 'CRISP WHITE SHIRT', desc: '100% Egyptian Cotton, French Cuffs', img: 'https://placehold.co/1080x1440/ffffff/000?text=White+Shirt\n(Shirts)' },
-                    { title: 'LIGHT BLUE OXFORD', desc: 'Button-down collar, casual tailoring', img: 'https://placehold.co/1080x1440/add8e6/000?text=Blue+Oxford\n(Shirts)' },
-                    { title: 'PRINTED SILK SHIRT', desc: 'Bold evening wear luxury statement', img: 'https://placehold.co/1080x1440/ff69b4/000?text=Printed+Silk\n(Shirts)' }
+                    { title: 'CRISP WHITE SHIRT', desc: '100% Egyptian Cotton, French Cuffs', img: 'assets/Shirts/sample image.jpg' },
+                    { title: 'LIGHT BLUE OXFORD', desc: 'Button-down collar, casual tailoring', img: 'assets/Shirts/sample image.jpg' },
+                    { title: 'PRINTED SILK SHIRT', desc: 'Bold evening wear luxury statement', img: 'assets/Shirts/sample image.jpg' }
                 ]
             },
             {
                 id: 'trousers', name: 'TROUSERS',
                 themeColor: '#222222',
-                catThumb: 'https://placehold.co/200x200/a9a9a9/000?text=Trousers',
+                catThumb: 'assets/Trousers/sample image.jpg',
                 items: [
-                    { title: 'TAILORED CHINOS', desc: 'Versatile beige flat-front luxury chinos', img: 'https://placehold.co/1080x1440/f5f5dc/000?text=Beige+Chinos\n(Trousers)' },
-                    { title: 'WOOL DRESS PANTS', desc: 'Charcoal grey, sharply creased wool', img: 'https://placehold.co/1080x1440/696969/fff?text=Wool+Dress+Pants\n(Trousers)' },
-                    { title: 'SLIM FIT BLACK TROUSERS', desc: 'Essential foundational wardrobe piece', img: 'https://placehold.co/1080x1440/000000/fff?text=Black+Trousers\n(Trousers)' }
+                    { title: 'TAILORED CHINOS', desc: 'Versatile beige flat-front luxury chinos', img: 'assets/Trousers/sample image.jpg' },
+                    { title: 'WOOL DRESS PANTS', desc: 'Charcoal grey, sharply creased wool', img: 'assets/Trousers/sample image.jpg' },
+                    { title: 'SLIM FIT BLACK TROUSERS', desc: 'Essential foundational wardrobe piece', img: 'assets/Trousers/sample image.jpg' }
                 ]
             }
         ];
@@ -324,7 +445,8 @@
 
         let currentState = {
             categoryIndex: 0,
-            itemIndex: 0
+            itemIndex: 0,
+            subcategoryIndex: null
         };
 
         // Kiosk Control States
@@ -354,7 +476,7 @@
             setupInactivityListeners();
 
             // Handle broken image fallbacks gracefully
-            mainImageEl.onerror = function() {
+            mainImageEl.onerror = function () {
                 this.src = 'https://placehold.co/1080x1440/1a1a1a/c9a96e?text=AURA+Luxury+Outfit';
             };
         }
@@ -380,7 +502,12 @@
 
         function renderThumbnails() {
             thumbnailContainerEl.innerHTML = '';
-            const currentItems = fashionData[currentState.categoryIndex].items;
+            const currentCat = fashionData[currentState.categoryIndex];
+            const currentItems = currentCat.subcategories && currentState.subcategoryIndex !== null
+                ? currentCat.subcategories[currentState.subcategoryIndex].items
+                : currentCat.items;
+
+            if (!currentItems) return;
 
             currentItems.forEach((item, index) => {
                 const isActive = index === currentState.itemIndex;
@@ -397,10 +524,66 @@
 
         function updateDisplay() {
             const currentCat = fashionData[currentState.categoryIndex];
-            const currentItem = currentCat.items[currentState.itemIndex];
 
-            // Update Dynamic Sidebar Gradient
+            if (currentCat.subcategories && currentState.subcategoryIndex === null) {
+                document.getElementById('image-display-container').classList.add('hidden');
+                document.getElementById('thumbnail-gallery-container').classList.add('hidden');
+
+                let subView = document.getElementById('subcategory-view');
+                if (!subView) {
+                    subView = document.createElement('div');
+                    subView.id = 'subcategory-view';
+                    subView.className = 'flex-1 w-full h-full bg-black p-8 flex flex-col justify-center items-center z-30 absolute inset-0';
+                    document.getElementById('main-area').appendChild(subView);
+                }
+                subView.classList.remove('hidden');
+
+                subView.innerHTML = `
+                    <h2 class="font-serif text-3xl md:text-5xl text-aura-gold font-bold mb-12 tracking-widest uppercase">Select Collection</h2>
+                    <div class="flex flex-row space-x-8 justify-center w-full max-w-4xl">
+                        ${currentCat.subcategories.map((sub, idx) => `
+                            <div onclick="selectSubcategory(${idx})" class="w-64 h-96 cursor-pointer relative group rounded-2xl overflow-hidden shadow-2xl transition-all duration-500 hover:scale-105 border border-white/10 hover:border-aura-gold/50">
+                                <img src="${sub.catThumb}" alt="${sub.name}" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent flex items-end p-6">
+                                    <h3 class="font-serif text-2xl text-white font-bold group-hover:text-aura-gold transition-colors">${sub.name}</h3>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+
+                sidebarEl.style.background = `linear-gradient(to bottom, ${currentCat.themeColor}, #0a0a0a)`;
+                renderSidebar();
+                stopSlideshow();
+                return;
+            }
+
+            let subView = document.getElementById('subcategory-view');
+            if (subView) subView.classList.add('hidden');
+
+            document.getElementById('image-display-container').classList.remove('hidden');
+            document.getElementById('thumbnail-gallery-container').classList.remove('hidden');
+
+            const activeItems = currentCat.subcategories ? currentCat.subcategories[currentState.subcategoryIndex].items : currentCat.items;
+            const currentItem = activeItems[currentState.itemIndex];
+            const displayName = currentCat.subcategories ? currentCat.subcategories[currentState.subcategoryIndex].name : currentCat.name;
+
             sidebarEl.style.background = `linear-gradient(to bottom, ${currentCat.themeColor}, #0a0a0a)`;
+
+            let backBtn = document.getElementById('back-to-subcategories-btn');
+            if (currentCat.subcategories) {
+                if (!backBtn) {
+                    backBtn = document.createElement('button');
+                    backBtn.id = 'back-to-subcategories-btn';
+                    backBtn.onclick = backToSubcategories;
+                    backBtn.className = 'absolute top-6 left-6 z-50 glass-panel hover:bg-aura-gold text-white hover:text-black px-4 py-2 rounded-full flex items-center justify-center transition-all shadow-lg hover:scale-105 active:scale-95 text-sm font-sans font-bold tracking-widest uppercase';
+                    backBtn.innerHTML = '<i class="fa-solid fa-arrow-left mr-2"></i> Back';
+                    document.getElementById('image-display-container').appendChild(backBtn);
+                }
+                backBtn.classList.remove('hidden');
+            } else if (backBtn) {
+                backBtn.classList.add('hidden');
+            }
 
             // Animate Out Text and Main Image
             mainTitleEl.classList.remove('translate-y-0', 'opacity-100');
@@ -411,7 +594,7 @@
             mainImageEl.classList.add('opacity-0', 'scale-95');
 
             setTimeout(() => {
-                categoryBadgeEl.textContent = currentCat.name;
+                categoryBadgeEl.textContent = displayName;
                 mainImageEl.src = currentItem.img;
                 mainTitleEl.textContent = currentItem.title;
                 mainDescEl.textContent = currentItem.desc;
@@ -438,11 +621,24 @@
         // --- NAVIGATION & INTERACTION ---
 
         function selectCategory(index) {
-            if (currentState.categoryIndex === index) return;
+            if (currentState.categoryIndex === index && currentState.subcategoryIndex === null) return;
             currentState.categoryIndex = index;
+            currentState.itemIndex = 0;
+            currentState.subcategoryIndex = null;
+            updateDisplay();
+            resetAutoPlayTimer();
+        }
+
+        function selectSubcategory(index) {
+            currentState.subcategoryIndex = index;
             currentState.itemIndex = 0;
             updateDisplay();
             resetAutoPlayTimer();
+        }
+
+        function backToSubcategories() {
+            currentState.subcategoryIndex = null;
+            updateDisplay();
         }
 
         function selectItem(index) {
@@ -454,22 +650,53 @@
 
         function nextItem() {
             const currentCat = fashionData[currentState.categoryIndex];
-            if (currentState.itemIndex + 1 < currentCat.items.length) {
+            const activeItems = currentCat.subcategories && currentState.subcategoryIndex !== null
+                ? currentCat.subcategories[currentState.subcategoryIndex].items
+                : currentCat.items;
+
+            if (currentState.itemIndex + 1 < activeItems.length) {
                 currentState.itemIndex++;
             } else {
-                currentState.categoryIndex = (currentState.categoryIndex + 1) % fashionData.length;
-                currentState.itemIndex = 0;
+                if (currentCat.subcategories && currentState.subcategoryIndex + 1 < currentCat.subcategories.length) {
+                    currentState.subcategoryIndex++;
+                    currentState.itemIndex = 0;
+                } else {
+                    currentState.categoryIndex = (currentState.categoryIndex + 1) % fashionData.length;
+                    const nextCat = fashionData[currentState.categoryIndex];
+                    if (nextCat.subcategories) {
+                        currentState.subcategoryIndex = 0;
+                    } else {
+                        currentState.subcategoryIndex = null;
+                    }
+                    currentState.itemIndex = 0;
+                }
             }
             updateDisplay();
         }
 
         function prevItem() {
             const currentCat = fashionData[currentState.categoryIndex];
+            const activeItems = currentCat.subcategories && currentState.subcategoryIndex !== null
+                ? currentCat.subcategories[currentState.subcategoryIndex].items
+                : currentCat.items;
+
             if (currentState.itemIndex > 0) {
                 currentState.itemIndex--;
             } else {
-                currentState.categoryIndex = (currentState.categoryIndex - 1 + fashionData.length) % fashionData.length;
-                currentState.itemIndex = fashionData[currentState.categoryIndex].items.length - 1;
+                if (currentCat.subcategories && currentState.subcategoryIndex > 0) {
+                    currentState.subcategoryIndex--;
+                    currentState.itemIndex = currentCat.subcategories[currentState.subcategoryIndex].items.length - 1;
+                } else {
+                    currentState.categoryIndex = (currentState.categoryIndex - 1 + fashionData.length) % fashionData.length;
+                    const prevCat = fashionData[currentState.categoryIndex];
+                    if (prevCat.subcategories) {
+                        currentState.subcategoryIndex = prevCat.subcategories.length - 1;
+                        currentState.itemIndex = prevCat.subcategories[currentState.subcategoryIndex].items.length - 1;
+                    } else {
+                        currentState.subcategoryIndex = null;
+                        currentState.itemIndex = prevCat.items.length - 1;
+                    }
+                }
             }
             updateDisplay();
             resetAutoPlayTimer();
@@ -491,10 +718,20 @@
                 '3pcsuits': '3Pc Suits',
                 'jodhapuri': 'Jodhapuri',
                 'sherwani': 'Sherwani',
-                'bundikurta': 'Bundi-Kurta',
+                'kurta': 'Kurta',
                 'dhotis': 'Dhotis',
                 'shirts': 'Shirts',
-                'trousers': 'Trousers'
+                'trousers': 'Trousers',
+                'formalbundi': 'Bundi/Formal Bundi',
+                'ethnicbundi': 'Bundi/Ethnic Bundi',
+                'blazers_casuals': 'Blazers/Casuals',
+                'blazers_formals': 'Blazers/Formals',
+                '2pcsuits_formals': '2Pc Suits/Formals',
+                '2pcsuits_wedding': '2Pc Suits/Wedding',
+                '3pcsuits_waistcoats': '3Pc Suits/Waistcoats',
+                '3pcsuits_wedding': '3Pc Suits/Wedding',
+                'jodhpuri_formal': 'Jodhapuri/Formal',
+                'jodhpuri_wedding': 'Jodhapuri/Wedding'
             };
 
             const candidates = [
@@ -507,28 +744,55 @@
             ];
 
             fashionData.forEach(cat => {
-                const folderName = folderMap[cat.id] || cat.name;
-                const foundItems = [];
+                if (cat.subcategories) {
+                    cat.subcategories.forEach(sub => {
+                        const folderName = folderMap[sub.id] || sub.name;
+                        const foundItems = [];
 
-                candidates.forEach(filename => {
-                    const imgUrl = `assets/${folderName}/${filename}`;
-                    const img = new Image();
-                    img.onload = function() {
-                        if (!foundItems.some(i => i.img === imgUrl)) {
-                            const rawTitle = filename.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ").toUpperCase();
-                            const cleanTitle = (rawTitle === 'SAMPLE IMAGE' || rawTitle === 'SAMPLE') ? `${cat.name} OUTFIT` : rawTitle;
-                            foundItems.push({
-                                title: cleanTitle,
-                                desc: `Tailored outfit from ${cat.name} collection`,
-                                img: imgUrl
-                            });
-                            cat.items = foundItems;
-                            cat.catThumb = foundItems[0].img;
-                            updateDisplay();
-                        }
-                    };
-                    img.src = imgUrl;
-                });
+                        candidates.forEach(filename => {
+                            const imgUrl = `assets/${folderName}/${filename}`;
+                            const img = new Image();
+                            img.onload = function () {
+                                if (!foundItems.some(i => i.img === imgUrl)) {
+                                    const rawTitle = filename.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ").toUpperCase();
+                                    const cleanTitle = (rawTitle === 'SAMPLE IMAGE' || rawTitle === 'SAMPLE') ? `${sub.name} OUTFIT` : rawTitle;
+                                    foundItems.push({
+                                        title: cleanTitle,
+                                        desc: `Tailored outfit from ${sub.name} collection`,
+                                        img: imgUrl
+                                    });
+                                    sub.items = foundItems;
+                                    sub.catThumb = foundItems[0].img;
+                                    updateDisplay();
+                                }
+                            };
+                            img.src = imgUrl;
+                        });
+                    });
+                } else {
+                    const folderName = folderMap[cat.id] || cat.name;
+                    const foundItems = [];
+
+                    candidates.forEach(filename => {
+                        const imgUrl = `assets/${folderName}/${filename}`;
+                        const img = new Image();
+                        img.onload = function () {
+                            if (!foundItems.some(i => i.img === imgUrl)) {
+                                const rawTitle = filename.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ").toUpperCase();
+                                const cleanTitle = (rawTitle === 'SAMPLE IMAGE' || rawTitle === 'SAMPLE') ? `${cat.name} OUTFIT` : rawTitle;
+                                foundItems.push({
+                                    title: cleanTitle,
+                                    desc: `Tailored outfit from ${cat.name} collection`,
+                                    img: imgUrl
+                                });
+                                cat.items = foundItems;
+                                cat.catThumb = foundItems[0].img;
+                                updateDisplay();
+                            }
+                        };
+                        img.src = imgUrl;
+                    });
+                }
             });
         }
 
@@ -572,7 +836,7 @@
             if (progressTimer) clearInterval(progressTimer);
             progressBarEl.style.transition = 'none';
             progressBarEl.style.width = '0%';
-            
+
             setTimeout(() => {
                 progressBarEl.style.transition = `width ${SLIDESHOW_INTERVAL}ms linear`;
                 progressBarEl.style.width = '100%';
