@@ -235,10 +235,14 @@
     <div id="search-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-lg flex flex-col p-8 hidden">
         <div class="flex justify-between items-center max-w-4xl mx-auto w-full mb-6">
             <div
-                class="flex items-center space-x-3 w-full max-w-xl glass-panel px-4 py-3 rounded-2xl border border-aura-gold/30">
+                class="flex items-center space-x-3 w-full max-w-2xl glass-panel px-4 py-3 rounded-2xl border border-aura-gold/30">
+                <select id="search-category-filter" onchange="handleSearch()"
+                    class="bg-transparent text-aura-gold border-r border-gray-600 pr-3 mr-2 outline-none font-sans text-sm cursor-pointer uppercase tracking-widest font-bold">
+                    <option value="all" class="bg-[#1a1a1a]">ALL CATEGORIES</option>
+                </select>
                 <i class="fa-solid fa-magnifying-glass text-aura-gold text-lg"></i>
                 <input type="text" id="search-input" onkeyup="handleSearch()"
-                    placeholder="Search suits, sherwanis, blazers, fabric..."
+                    placeholder="Search outfits..."
                     class="bg-transparent text-white placeholder-gray-400 outline-none w-full font-sans text-base">
             </div>
             <button onclick="closeSearchModal()" class="text-gray-400 hover:text-white text-2xl p-2 ml-4">
@@ -916,6 +920,19 @@
 
         function openSearchModal() {
             stopSlideshow();
+            
+            const filterSelect = document.getElementById('search-category-filter');
+            if (filterSelect && filterSelect.options.length <= 1) {
+                fashionData.forEach(cat => {
+                    const option = document.createElement('option');
+                    option.value = cat.id;
+                    option.textContent = cat.name;
+                    option.className = 'bg-[#1a1a1a] text-white';
+                    filterSelect.appendChild(option);
+                });
+            }
+            if (filterSelect) filterSelect.value = 'all';
+
             document.getElementById('search-modal').classList.remove('hidden');
             document.getElementById('search-input').value = '';
             handleSearch();
@@ -929,10 +946,14 @@
 
         function handleSearch() {
             const query = document.getElementById('search-input').value.toLowerCase();
+            const filterSelect = document.getElementById('search-category-filter');
+            const selectedCatId = filterSelect ? filterSelect.value : 'all';
             const container = document.getElementById('search-results');
             container.innerHTML = '';
 
             fashionData.forEach((cat, catIdx) => {
+                if (selectedCatId !== 'all' && cat.id !== selectedCatId) return;
+
                 if (cat.subcategories) {
                     cat.subcategories.forEach((sub, subIdx) => {
                         if (!sub.items) return;
